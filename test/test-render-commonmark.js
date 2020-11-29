@@ -1,5 +1,5 @@
-var assert = require('assert')
-var texme = require('../texme.js')
+const assert = require('assert')
+const texme = require('../texme.js')
 
 describe('renderCommonMark', function () {
   before(function () {
@@ -8,8 +8,8 @@ describe('renderCommonMark', function () {
   })
 
   it('simple', function () {
-    var input = '*Foo* **Bar** `Baz`'
-    var expected = '<p><em>Foo</em> <strong>Bar</strong> <code>Baz</code></p>\n'
+    const input = '*Foo* **Bar** `Baz`'
+    const expected = '<p><em>Foo</em> <strong>Bar</strong> <code>Baz</code></p>\n'
     assert.deepStrictEqual(texme.renderCommonMark(input), expected)
   })
 })
