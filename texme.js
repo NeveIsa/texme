@@ -68,6 +68,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     options.protectMath = true
     options.style = 'viewer'
     options.onRenderPage = undefined
+    options.externalMarkdownRenderer = undefined
 
     // Update "Configuration Options" section of README.md if any of the
     // following URLs is updated.
@@ -355,6 +356,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var result = new commonmark.HtmlRenderer().render(parsed)
     return result
   }
+ 
+  /**
+   * Render Markdown using appropriate Markdown Renderer
+   *
+   * @param {string} s - Markdown content.
+   *
+   * @returns {string} Rendered HTML.
+   */
+  texme.renderMarkdown = function (s) {
+    var renderer = typeof options.externalMarkdownRenderer === 'function' ? options.externalMarkdownRenderer : texme.renderCommonMark
+    return renderer(s)
+  }
 
   /**
    * Render Markdown content while being careful that LaTeX content is
@@ -365,10 +378,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    *
    * @returns {string} Rendered HTML.
    */
-  texme.protectMathAndRenderCommonMark = function (s) {
+  texme.protectMathAndRenderMarkdown = function (s) {
     var tokens = texme.tokenize(s)
     var masked = texme.mask(tokens)
-    var rendered = texme.renderCommonMark(masked.text)
+    var rendered = texme.renderMarkdown(masked.text)
     var unmasked = texme.unmask(rendered, masked.tokenValues)
     return unmasked
   }
@@ -382,9 +395,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    */
   texme.render = function (s) {
     if (options.protectMath) {
-      return texme.protectMathAndRenderCommonMark(s)
+      return texme.protectMathAndRenderMarkdown(s)
     } else {
-      return texme.renderCommonMark(s)
+      return texme.renderMarkdown(s)
     }
   }
 
